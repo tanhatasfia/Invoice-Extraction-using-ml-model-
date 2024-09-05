@@ -1,0 +1,23 @@
+I am following this tutorial https://tensorflow-object-detection-api-tutorial.readthedocs.io/en/latest/install.html
+python 3.11.9 
+install visual studio code and microsoft c++ build tools 2022 and then add desktop development c++ while installing then add edit system variable 
+pip install tensorflow 2.15.0 								
+pip install protobuf 3.20.3								
+download zip folder of 3.20.3 windows version from github release 								
+add  protoc.exe or application from the bin folder after unziping the folder then add the exe file into the scripts of virtual environment 								
+From within TensorFlow/models/research/
+protoc object_detection/protos/*.proto --python_out=.
+pip install cython
+pip install git+https://github.com/philferriere/cocoapi.git#subdirectory=PythonAPI"						[donot skip the cocoapi ]		
+after that 	pip uninstall Cython -y							
+# From within TensorFlow/models/research/
+cp object_detection/packages/tf2/setup.py .
+python -m pip install .
+				
+that will uninstall tensorflow 2.15.0 so install this  tensorflow 2.15.0  version again 								
+"then run the test.py file which will again give error like    from tensorflow.python.keras.layers.preprocessing import image_preprocessing as image_ops
+ModuleNotFoundError: No module named 'tensorflow.python.keras.layers.preprocessing'"								
+can solve this error by doing this 		"Go to this file ""....conda\virtualenvs\tfCV\Lib\site-packages\official\vision\image_classification\augment.py"" on your device and change line 31 to this:
+from tensorflow.keras.preprocessing import image as image_ops"						
+source : https://github.com/tensorflow/models/issues/10505								
+then run the test python file								
