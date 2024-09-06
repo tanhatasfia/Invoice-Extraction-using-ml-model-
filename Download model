@@ -1,0 +1,75 @@
+For efficientdet
+MODELS_CONFIG = {
+    'efficientdet-d0': {
+        'model_name': 'efficientdet_d0_coco17_tpu-32',
+        'base_pipeline_file': 'ssd_efficientdet_d0_512x512_coco17_tpu-8.config',
+        'pretrained_checkpoint': 'efficientdet_d0_coco17_tpu-32.tar.gz',
+        'batch_size': 2
+    },
+    'efficientdet-d1': {
+        'model_name': 'efficientdet_d1_coco17_tpu-32',
+        'base_pipeline_file': 'ssd_efficientdet_d1_640x640_coco17_tpu-8.config',
+        'pretrained_checkpoint': 'efficientdet_d1_coco17_tpu-32.tar.gz',
+        'batch_size': 2
+    },
+    'efficientdet-d2': {
+        'model_name': 'efficientdet_d2_coco17_tpu-32',
+        'base_pipeline_file': 'ssd_efficientdet_d2_768x768_coco17_tpu-8.config',
+        'pretrained_checkpoint': 'efficientdet_d2_coco17_tpu-32.tar.gz',
+        'batch_size': 2
+    },
+        'efficientdet-d3': {
+        'model_name': 'efficientdet_d3_coco17_tpu-32',
+        'base_pipeline_file': 'ssd_efficientdet_d3_896x896_coco17_tpu-32.config',
+        'pretrained_checkpoint': 'efficientdet_d3_coco17_tpu-32.tar.gz',
+        'batch_size': 2
+    }
+}
+
+#in this tutorial we implement the lightweight, smallest state of the art efficientdet model
+#if you want to scale up tot larger efficientdet models you will likely need more compute!
+chosen_model = 'efficientdet-d2'
+
+#num_steps = 40000 #The more steps, the longer the training. Increase if your loss function is still decreasing and validation metrics are increasing. 
+#num_eval_steps = 500 #Perform evaluation after so many steps
+
+model_name = MODELS_CONFIG[chosen_model]['model_name']
+fine_tune_checkpoint = MODELS_CONFIG[chosen_model]['pretrained_checkpoint']
+pipeline_config_path = MODELS_CONFIG[chosen_model]['base_pipeline_file']
+
+%cd /content
+import tarfile
+download_tar = 'http://download.tensorflow.org/models/object_detection/tf2/20200711/' + fine_tune_checkpoint
+
+!wget {download_tar}
+tar = tarfile.open(fine_tune_checkpoint)
+tar.extractall()
+tar.close()
+
+%cd /content/
+download_config = 'https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/configs/tf2/' + pipeline_config_path
+!wget {download_config}
+!wget download.tensorflow.org/models/object_detection/tf2/20200711/faster_rcnn_resnet101_v1_640x640_coco17_tpu-8.tar.gz
+
+For faster rcnn
+# Extract the downloaded faster rcnn tar.gz file
+!tar -xvf faster_rcnn_resnet101_v1_640x640_coco17_tpu-8.tar.gz
+!rm faster_rcnn_resnet101_v1_640x640_coco17_tpu-8.tar.gz
+!mv faster_rcnn_resnet101_v1_640x640_coco17_tpu-8 frcnn_resnet101_v1
+!wget https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/configs/tf2/faster_rcnn_resnet101_v1_640x640_coco17_tpu-8.config
+!mv faster_rcnn_resnet101_v1_640x640_coco17_tpu-8.config frcnn_resnet101_v1.config
+
+
+For ssd mobilenet
+!wget http://download.tensorflow.org/models/object_detection/tf2/20200711/ssd_mobilenet_v2_fpnlite_640x640_coco17_tpu-8.tar.gz
+!tar -xvf ssd_mobilenet_v2_fpnlite_640x640_coco17_tpu-8.tar.gz
+!rm ssd_mobilenet_v2_fpnlite_640x640_coco17_tpu-8.tar.gz
+!mv ssd_mobilenet_v2_fpnlite_640x640_coco17_tpu-8 mobilenet_v2_fpn
+!wget https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/configs/tf2/ssd_mobilenet_v2_fpnlite_640x640_coco17_tpu-8.config
+!mv ssd_mobilenet_v2_fpnlite_640x640_coco17_tpu-8.config mobile.config
+
+
+
+
+
+
